@@ -5,10 +5,10 @@
 
   <changeSet id="20231212-0" author="Mina">
     <sql>
-      CREATE SCHEMA IF NOT EXISTS authentication;
+
     </sql>
     <rollback>
-      DROP SCHEMA IF EXISTS authentication;
+
     </rollback>
   </changeSet>
 </databaseChangeLog>
