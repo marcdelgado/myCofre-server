@@ -3,6 +3,11 @@ server:
   # graceful shutdown makes sure we have time to finnish any ongoing rest requests before terminating
   # default value will be 30s before terminating
   shutdown: graceful
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: pass123
+    key-store-type: PKCS12
+    key-alias: mycofre
 
 spring:
   threads:
