@@ -6,6 +6,7 @@ import myCofre.server.domain.User;
 import myCofre.server.helper.SecurityUtils;
 import myCofre.server.repository.VaultRepository;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public class VaultService {
         if (user.isPresent()) {
             Optional<Vault> vault = vaultRepository.findByUserId(user.get().getId());
             if(vault.isPresent()){
-                byte[] content = updatedVaultRequest.content();
+                byte[] content = updatedVaultRequest.content().getBytes(StandardCharsets.UTF_8);
                 vault.get().setContent(content);
                 return vaultRepository.save(vault.get());
             }

@@ -18,6 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,7 @@ public class VaultController {
     if (vault == null) {
       return ResponseEntity.notFound().build();
     }
-    VaultRequest vaultDTO = new VaultRequest(vault.getContent());
+    VaultRequest vaultDTO = new VaultRequest(new String (vault.getContent(), StandardCharsets.UTF_8));
     return ResponseEntity.ok(vaultDTO);
   }
 
@@ -61,7 +62,7 @@ public class VaultController {
     if (updatedVault == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(new VaultRequest(updatedVault.getContent()));
+    return ResponseEntity.ok(new VaultRequest(new String (updatedVault.getContent(), StandardCharsets.UTF_8)));
   }
 
 

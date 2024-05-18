@@ -29,9 +29,9 @@ public class SwaggerConfiguration {
 
   private Info apiInfo() {
     return new Info()
-        .title("Authentication Service Api Doc")
+        .title("MyCofre Webservice")
         .version("1.0.0")
-        .description("HTTP APIs to manage user registration and authentication.")
-        .contact(new Contact().name("Mina Rashidi"));
+        .description("")
+        .contact(new Contact().name("Marc Delgado"));
   }
 }

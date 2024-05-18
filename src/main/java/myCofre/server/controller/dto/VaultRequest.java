@@ -5,9 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record VaultRequest(
         @Schema(description = "content")
-        byte[] content) {
+        String content) {
 
-        public VaultRequest(byte[] content){
+        public VaultRequest(String content){
                 this.content = content;
         }
 
