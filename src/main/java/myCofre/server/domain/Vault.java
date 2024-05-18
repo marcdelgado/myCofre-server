@@ -41,4 +41,10 @@ public class Vault {
     @Column(nullable = false)
     @Size(max = 1048576) // Limita el tamaño del contenido a 1MB
     private byte[] content;
+
+    public Vault(User user, String name, byte[] content){
+        this.user = user;
+        this.name = name;
+        this.content = content;
+    }
 }

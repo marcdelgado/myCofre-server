@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface VaultRepository extends JpaRepository<Vault, Long> {
     Optional<Vault> findByUserId(Long userId);
     Optional<Vault> findByIdAndUserId(Long userId, Long id);
+
+
 }

@@ -7,6 +7,7 @@ import myCofre.server.helper.SecurityUtils;
 import myCofre.server.repository.VaultRepository;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import myCofre.server.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,36 +27,31 @@ public class VaultService {
         this.userRepository = userRepository;
     }
 
+
     @Transactional
-    public Vault createVaultForUser(Long userId, String name, byte[] content) {
-        // Encuentra el User por su ID
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Crea una nueva instancia de Chest y establece sus propiedades
-        Vault vault = new Vault();
-        vault.setUser(user);
-        vault.setName(name);
-        vault.setContent(content);
-
-        // Guarda el Chest en la base de datos
-        return vaultRepository.save(vault);
+    public Vault findByUsername(String username) {
+        Optional<User> user = userRepository.findByEmail(username);
+        if (user.isPresent()) {
+            Optional<Vault> vault = vaultRepository.findByUserId(user.get().getId());
+            if (vault.isPresent()) return vault.get();
+        }
+        return null;
     }
 
     @Transactional
-    public Vault createVaultForCurrentUser(VaultRequest req) {
-        String username = Objects.requireNonNull(SecurityUtils.getCurrentUsername());
-
-        // Encuentra el User por su ID
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Crea una nueva instancia de Chest y establece sus propiedades
-        Vault vault = new Vault();
-        vault.setUser(user);
-        vault.setName(req.name());
-        vault.setContent(req.content());
-
-        // Guarda el Chest en la base de datos
-        return vaultRepository.save(vault);
+    public Vault updateVault(String username, VaultRequest updatedVaultRequest) {
+        Optional<User> user = userRepository.findByEmail(username);
+        if (user.isPresent()) {
+            Optional<Vault> vault = vaultRepository.findByUserId(user.get().getId());
+            if(vault.isPresent()){
+                byte[] content = updatedVaultRequest.content();
+                vault.get().setContent(content);
+                return vaultRepository.save(vault.get());
+            }
+        }
+        return null;
     }
+
+
 
 }

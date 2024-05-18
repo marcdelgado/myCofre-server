@@ -8,12 +8,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -35,25 +39,23 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
     return http
-        .cors(AbstractHttpConfigurer::disable)  //Cross-origin resource sharing: Evitar solo si saltamos de dominio.
-        .csrf(AbstractHttpConfigurer::disable)  //CSRF(Cross-Site Request Forgery)
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//        Set permissions on endpoints
-        .authorizeHttpRequests(auth -> auth
-//            our public endpoints
-            .requestMatchers(HttpMethod.PUT, "/api/auth/signup/**").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/auth/login/**").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/chest/create/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/myCofre-docs/**").permitAll()
-//            our private endpoints
-            .anyRequest().authenticated())
-        .authenticationManager(authenticationManager)
-
-//        We need jwt filter before the UsernamePasswordAuthenticationFilter.
-//        Since we need every request to be authenticated before going through spring security filter.
-//        (UsernamePasswordAuthenticationFilter creates a UsernamePasswordAuthenticationToken from a username and password that are submitted in the HttpServletRequest.)
-        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-        .build();
+            .cors().configurationSource(corsConfigurationSource()).and()  // Aquí habilitamos CORS
+            .csrf().disable()  // CSRF(Cross-Site Request Forgery)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            // Set permissions on endpoints
+            .authorizeHttpRequests(auth -> auth
+                    // Public endpoints
+                    .requestMatchers(HttpMethod.PUT, "/api/auth/signup/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/login/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/vault/read/**").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/vault/update/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/myCofre-docs/**").permitAll()
+                    // Private endpoints
+                    .anyRequest().authenticated())
+            .authenticationManager(authenticationManager)
+            // We need jwt filter before the UsernamePasswordAuthenticationFilter.
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
   }
 
   @Bean
@@ -61,5 +63,17 @@ public class SecurityConfig {
     AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
     authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     return authenticationManagerBuilder.build();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(Arrays.asList("*"));
+    configuration.setAllowCredentials(true);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
   }
 }
