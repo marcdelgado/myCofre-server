@@ -5,7 +5,7 @@ server:
   shutdown: graceful
   ssl:
     key-store: classpath:keystore.p12
-    key-store-password: pass123
+    key-store-password: ${MYCOFRE_KEYSTORE_PASS}
     key-store-type: PKCS12
     key-alias: mycofre
 
@@ -18,8 +18,8 @@ spring:
   datasource:
     url: jdbc:mysql://PMYSQL166.dns-servicio.com:3306/9628284_myCofre?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: myCofreAdmin
-    password: 9C4675BB9Aab
+    username: ${MYCOFRE_DB_USER}
+    password: ${MYCOFRE_DB_PASS}
     hikari.connectionTimeout: 100000
     hikari.idleTimeout: 600000
     hikari.maxLifetime: 1800000
