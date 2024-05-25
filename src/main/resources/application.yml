@@ -1,14 +1,3 @@
-server:
-  port: 9000
-  # graceful shutdown makes sure we have time to finnish any ongoing rest requests before terminating
-  # default value will be 30s before terminating
-  shutdown: graceful
-  ssl:
-    key-store: classpath:keystore.p12
-    key-store-password: ${MYCOFRE_KEYSTORE_PASS}
-    key-store-type: PKCS12
-    key-alias: mycofre
-
 spring:
   threads:
     virtual:
@@ -23,6 +12,17 @@ spring:
     hikari.connectionTimeout: 100000
     hikari.idleTimeout: 600000
     hikari.maxLifetime: 1800000
+  mail:
+    host: smtp.postmarkapp.com
+    port: 587
+    username: ${MYCOFRE_SMTP_TOKEN}
+    password: ${MYCOFRE_SMTP_TOKEN}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   liquibase:
     enabled: true
@@ -30,9 +30,9 @@ spring:
 
 springdoc:
   api-docs:
-    path: /myCofre-docs
+    path: /myCofre-api/docs
   swagger-ui:
-    path: /myCofre-docs/swagger-ui-custom.html
+    path: /myCofre-api/docs/swagger-ui-custom.html
 
 logging.level:
   root: DEBUG

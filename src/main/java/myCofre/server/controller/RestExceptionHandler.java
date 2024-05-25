@@ -6,12 +6,12 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
-import myCofre.server.controller.dto.ApiErrorResponse;
 import myCofre.server.exceptions.DuplicateException;
 import myCofre.server.exceptions.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import myCofre.server.exceptions.OutOfSyncException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -55,6 +55,11 @@ public class RestExceptionHandler {
   @ExceptionHandler(InternalAuthenticationServiceException.class)
   public ResponseEntity<ApiErrorResponse> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException e) {
     return ResponseEntity.status(UNAUTHORIZED).body(new ApiErrorResponse(UNAUTHORIZED.value(), e.getMessage()));
+  }
+
+  @ExceptionHandler(OutOfSyncException.class)
+  public ResponseEntity<ApiErrorResponse> handleUnknownException(OutOfSyncException e) {
+    return ResponseEntity.status(CONFLICT).body(new ApiErrorResponse(CONFLICT.value(), e.getMessage()));
   }
 
   @ExceptionHandler(Exception.class)

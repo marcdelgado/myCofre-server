@@ -1,13 +1,14 @@
 package myCofre.server.service;
 
-import myCofre.server.controller.dto.VaultRequest;
+import myCofre.server.controller.vault.VaultRequest;
 import myCofre.server.domain.Vault;
 import myCofre.server.domain.User;
-import myCofre.server.helper.SecurityUtils;
+import myCofre.server.exceptions.OutOfSyncException;
 import myCofre.server.repository.VaultRepository;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Optional;
 
 import myCofre.server.repository.UserRepository;
@@ -40,19 +41,19 @@ public class VaultService {
     }
 
     @Transactional
-    public Vault updateVault(String username, VaultRequest updatedVaultRequest) {
+    public Vault write(String username, VaultRequest vaultRequest) {
         Optional<User> user = userRepository.findByEmail(username);
         if (user.isPresent()) {
             Optional<Vault> vault = vaultRepository.findByUserId(user.get().getId());
-            if(vault.isPresent()){
-                byte[] content = updatedVaultRequest.content().getBytes(StandardCharsets.UTF_8);
-                vault.get().setContent(content);
+            if(vault.isPresent() && vault.get().getLastUpdateTimestamp().equals(vaultRequest.lastUpdateTimestamp()) ) {
+                byte[] content = vaultRequest.vaultContent().getBytes(StandardCharsets.UTF_8);
+                vault.get().setVaultContent(content);
+                vault.get().setLastUpdateTimestamp(Timestamp.from(Instant.now()));
                 return vaultRepository.save(vault.get());
+            }else{
+                throw new OutOfSyncException("Sent content is out of sync respect to server version");
             }
         }
         return null;
     }
-
-
-
 }

@@ -1,13 +1,12 @@
 
-package myCofre.server.controller;
+package myCofre.server.controller.vault;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import myCofre.server.controller.dto.*;
-import myCofre.server.domain.LoginAttempt;
+import myCofre.server.controller.ApiErrorResponse;
 import myCofre.server.domain.Vault;
 import myCofre.server.service.VaultService;
 import org.springframework.http.HttpStatus;
@@ -19,11 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(path = "/api/vault", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/myCofre-api/vault", produces = MediaType.APPLICATION_JSON_VALUE)
 public class VaultController {
 
   private final AuthenticationManager authenticationManager;
@@ -34,41 +31,36 @@ public class VaultController {
     this.vaultService = vaultService;
   }
 
-  @Operation(summary = "Read vault")
-  @ApiResponse(responseCode = "201")
+  @Operation(summary = "Read vault, first time or for sync")
+  @ApiResponse(responseCode = "200")
+  @ApiResponse(responseCode = "403", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
   @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
   @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
   @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
   @GetMapping("/read")
-  public ResponseEntity<VaultRequest> getVault(@AuthenticationPrincipal UserDetails userDetails) {
+  public ResponseEntity<VaultRequest> read(@AuthenticationPrincipal UserDetails userDetails) {
     String username = userDetails.getUsername();
     Vault vault = vaultService.findByUsername(username);
     if (vault == null) {
       return ResponseEntity.notFound().build();
     }
-    VaultRequest vaultDTO = new VaultRequest(new String (vault.getContent(), StandardCharsets.UTF_8));
-    return ResponseEntity.ok(vaultDTO);
+    VaultRequest vaultRequest = new VaultRequest(new String (vault.getVaultContent(), StandardCharsets.UTF_8), vault.getLastUpdateTimestamp());
+    return ResponseEntity.ok(vaultRequest);
   }
 
-  @Operation(summary = "Create vault")
-  @ApiResponse(responseCode = "201")
+  @Operation(summary = "Write vault, first time or for sync")
+  @ApiResponse(responseCode = "202")
   @ApiResponse(responseCode = "404", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
   @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
   @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
-  @PutMapping("/update")
-  public ResponseEntity<VaultRequest> updateVault(@AuthenticationPrincipal UserDetails userDetails, @Valid  @RequestBody VaultRequest vault) {
+  @PutMapping("/write")
+  public ResponseEntity<Void> write(@AuthenticationPrincipal UserDetails userDetails, @Valid  @RequestBody VaultRequest vaultRequest) {
     String username = userDetails.getUsername();
-    Vault updatedVault = vaultService.updateVault(username, vault);
+    Vault updatedVault = vaultService.write(username, vaultRequest);
     if (updatedVault == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(new VaultRequest(new String (updatedVault.getContent(), StandardCharsets.UTF_8)));
+    return ResponseEntity.status(HttpStatus.ACCEPTED).build();
   }
 
-
-  private List<LoginAttemptResponse> convertToDTOs(List<LoginAttempt> loginAttempts) {
-    return loginAttempts.stream()
-        .map(LoginAttemptResponse::convertToDTO)
-        .collect(Collectors.toList());
-  }
 }

@@ -15,15 +15,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-public class LoginService {
+public class AuthService {
 
   private final LoginAttemptRepository loginAttemptRepository;
   private final UserRepository userRepository;
 
-  public LoginService(LoginAttemptRepository loginAttemptRepository, UserRepository userRepository) {
+  public AuthService(LoginAttemptRepository loginAttemptRepository, UserRepository userRepository) {
     this.loginAttemptRepository = loginAttemptRepository;
     this.userRepository = userRepository;
   }
+
+  public User findUserByEmail(String email){
+    Optional<User> user = userRepository.findByEmail(email);
+    return user.orElse(null);
+  }
+
+  @Transactional
+  public void changePassword(String email, String newPassword){
+    User user = findUserByEmail(email);
+    user.setRepassword(newPassword);
+    userRepository.save(user);
+  }
+
 
   @Transactional
   public void addLoginAttempt(String email, boolean success) {
@@ -36,8 +49,5 @@ public class LoginService {
     return loginAttemptRepository.findRecent(email, topTen);
   }
 
-  public User findUserByEmail(String email){
-    Optional<User> user = userRepository.findByEmail(email);
-    return user.orElse(null);
-  }
+
 }

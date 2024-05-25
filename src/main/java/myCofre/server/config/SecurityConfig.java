@@ -45,11 +45,13 @@ public class SecurityConfig {
             // Set permissions on endpoints
             .authorizeHttpRequests(auth -> auth
                     // Public endpoints
-                    .requestMatchers(HttpMethod.PUT, "/api/auth/signup/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/auth/login/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/vault/read/**").permitAll()
-                    .requestMatchers(HttpMethod.PUT, "/api/vault/update/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/myCofre-docs/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/myCofre-api/auth/login").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/myCofre-api/auth/getLoginAttempts").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/myCofre-api/user/signup").permitAll()
+                    .requestMatchers(HttpMethod.PATCH, "/myCofre-api/user/activate").permitAll()
+                    .requestMatchers(HttpMethod.PATCH, "/myCofre-api/user/requestDelete").permitAll()
+                    .requestMatchers(HttpMethod.PATCH, "/myCofre-api/user/confirmDelete").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/myCofre-api/docs/**").permitAll()
                     // Private endpoints
                     .anyRequest().authenticated())
             .authenticationManager(authenticationManager)
@@ -69,7 +71,7 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://mycofre.netlify.app"));
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
     configuration.setAllowedHeaders(Arrays.asList("*"));
     configuration.setAllowCredentials(true);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -32,6 +32,6 @@ public class SwaggerConfiguration {
         .title("MyCofre Webservice")
         .version("1.0.0")
         .description("")
-        .contact(new Contact().name("Marc Delgado"));
+        .contact(new Contact().name("Marc Delgado marcdelgado@gmail.com"));
   }
 }

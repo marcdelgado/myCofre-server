@@ -1,4 +1,4 @@
-package myCofre.server.controller.dto;
+package myCofre.server.controller;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
