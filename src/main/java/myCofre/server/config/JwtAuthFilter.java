@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import myCofre.server.controller.ApiErrorResponse;
 import myCofre.server.exceptions.AccessDeniedException;
 import myCofre.server.helper.JwtHelper;
-import myCofre.server.service.UserDetailsServiceImpl;
+import myCofre.server.helper.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

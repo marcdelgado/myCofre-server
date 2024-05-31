@@ -1,6 +1,6 @@
 package myCofre.server.config;
 
-import myCofre.server.service.UserDetailsServiceImpl;
+import myCofre.server.helper.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

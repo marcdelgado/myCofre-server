@@ -1,4 +1,4 @@
-package myCofre.server.service;
+package myCofre.server.helper;
 
 import myCofre.server.repository.UserRepository;
 import myCofre.server.domain.User;
