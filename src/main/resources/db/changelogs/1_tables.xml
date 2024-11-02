@@ -3,15 +3,22 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-  <changeSet id="20240517-0" author="developer">
+  <changeSet id="20241018-1" author="developer">
     <sql>
       CREATE TABLE IF NOT EXISTS user
       (
-        id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+          id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+          name VARCHAR(255),
+          surname VARCHAR(255),
+          email VARCHAR(255),
+          repassword VARCHAR(255),
+          account_state CHAR(1),
+          creation_timestamp TIMESTAMP,
+          lastAccess_timestamp TIMESTAMP,
+          activation_token VARCHAR(255),
+          delete_token VARCHAR(255),
+          fail_attempts INTEGER(1),
+          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
     </sql>
     <rollback>
@@ -19,7 +26,7 @@
     </rollback>
   </changeSet>
 
-  <changeSet id="20240517-1" author="developer">
+  <changeSet id="20241018-2" author="developer">
     <sql>
       CREATE TABLE IF NOT EXISTS login_attempt
       (
@@ -34,15 +41,16 @@
     </rollback>
   </changeSet>
 
-  <changeSet id="20240517-2" author="developer">
+  <changeSet id="20241018-3" author="developer">
     <sql>
       CREATE TABLE IF NOT EXISTS vault
       (
         id BIGINT AUTO_INCREMENT PRIMARY KEY,
         user_id BIGINT NOT NULL,
         name VARCHAR(255) NOT NULL,
-        content BLOB NOT NULL,
-        CONSTRAINT fk_chest_user FOREIGN KEY (user_id) REFERENCES User(id),
+        vault_content BLOB NOT NULL,
+        last_update_timestamp TIMESTAMP,
+        CONSTRAINT fk_chest_user FOREIGN KEY (user_id) REFERENCES user(id),
         CONSTRAINT uc_chest_name_user UNIQUE (user_id, name)
         );
     </sql>

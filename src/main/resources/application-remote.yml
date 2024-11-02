@@ -1,8 +1,9 @@
 server:
-  port: 9000
+  port: 443
   shutdown: graceful
   ssl:
-    key-store: classpath:keystore.p12
-    key-store-password: ${MYCOFRE_KEYSTORE_PASS}
+    key-store: /etc/letsencrypt/live/server.mycofre.com/mycofre.p12
+    key-store-password: '${MYCOFRE_KEYSTORE_PASS}'
     key-store-type: PKCS12
     key-alias: mycofre
+    enabled: true
