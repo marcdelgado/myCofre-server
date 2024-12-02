@@ -50,7 +50,10 @@ public class AuthController {
       authService.addLoginAttempt(request.email(), false);
       throw e;
     }
-    Long id = authService.findUserByEmail(request.email()).getId();
+    String state = authService.findUserByEmail(request.email()).getAccountState();
+    if(!state.equalsIgnoreCase("A")){
+      throw new BadCredentialsException("User not activated");
+    }
     String token = JwtHelper.generateToken(request.email());
     authService.addLoginAttempt(request.email(), true);
     return ResponseEntity.ok(new LoginResponse(token));

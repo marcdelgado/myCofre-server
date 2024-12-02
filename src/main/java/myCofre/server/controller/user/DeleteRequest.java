@@ -13,7 +13,7 @@ public record DeleteRequest(
         String email,
 
         @Schema(description = "Activation token", example = "123456")
-        @Size(min = 6, max = 6, message = "Activation token")
+        @Size(min = 0, max = 6, message = "Activation token")
         String deleteToken
 )
 

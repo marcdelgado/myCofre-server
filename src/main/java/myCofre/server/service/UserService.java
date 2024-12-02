@@ -29,11 +29,13 @@ public class UserService{
   private final UserRepository userRepository;
   private final VaultRepository vaultRepository;
   private final PasswordEncoder passwordEncoder;
+  private final EmailService emailService;
 
-  public UserService(UserRepository userRepository, VaultRepository vaultRepository, PasswordEncoder passwordEncoder) {
+  public UserService(UserRepository userRepository, VaultRepository vaultRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
     this.userRepository = userRepository;
     this.vaultRepository = vaultRepository;
     this.passwordEncoder = passwordEncoder;
+      this.emailService = emailService;
   }
 
   @Transactional
@@ -49,6 +51,7 @@ public class UserService{
     userRepository.save(user);
     Vault vault = new Vault(user, "Default vault", "".getBytes(StandardCharsets.UTF_8), Timestamp.from(Instant.now()));
     vaultRepository.save(vault);
+    emailService.sendEmail(user.getEmail(), "myCofre - Account Activation", activationToken);
   }
 
   @Transactional
@@ -100,6 +103,7 @@ public class UserService{
       String deleteToken = TokenHelper.generateHumanToken(6);
       user.get().setDeleteToken(deleteToken);
       userRepository.save(user.get());
+      emailService.sendEmail(user.get().getEmail(), "myCofre - Account Delete", deleteToken);
     }
   }
 

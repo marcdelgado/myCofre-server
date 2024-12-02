@@ -19,7 +19,7 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        message.setFrom("madebo@uoc.edu");
+        message.setFrom("no-reply@mycofre.com");
 
         mailSender.send(message);
     }
