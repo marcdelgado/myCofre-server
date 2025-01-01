@@ -1,4 +1,4 @@
-package myCofre.server.exceptions;
+package myCofre.server.exception;
 
 public class DuplicateException extends RuntimeException {
 

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baja de cuenta</title>
+</head>
+<body>
+<h1>Hola, <span th:text="${name}"></span>!</h1>
+<p>Lamentamos que quieras darte de baja de MyCofre.</p>
+<p>Si estás seguro de que deseas eliminar tu cuenta, por favor haz clic en el siguiente enlace:</p>
+<a id="tokenlink" th:href="${link}" style="word-break: break-all; color: #2d89ef;">
+    <p th:text="${link}"></p>
+</a>
+<p>Ten en cuenta que esta acción es irreversible y se eliminarán todos tus datos almacenados de forma permanente.</p>
+<p>Si no has solicitado la baja de tu cuenta, por favor ignora este mensaje.</p>
+<p>Atentamente,</p>
+<p>El equipo de MyCofre</p>
+</body>
+</html>

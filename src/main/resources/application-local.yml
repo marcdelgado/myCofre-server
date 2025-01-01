@@ -3,3 +3,4 @@ server:
   shutdown: graceful
   ssl:
     enabled: false
+  clienturl: http://localhost:4200

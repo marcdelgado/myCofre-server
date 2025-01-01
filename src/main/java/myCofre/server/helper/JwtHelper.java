@@ -1,6 +1,6 @@
 package myCofre.server.helper;
 
-import myCofre.server.exceptions.AccessDeniedException;
+import myCofre.server.exception.AccessDeniedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

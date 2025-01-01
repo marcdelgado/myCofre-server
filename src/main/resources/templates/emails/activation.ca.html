@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificació de compte</title>
+</head>
+<body>
+<h1>Hola, <span th:text="${name}"></span>!</h1>
+<p>Gràcies per registrar-te a MyCofre.</p>
+<p>Per activar el teu compte, fes clic en el següent enllaç:</p>
+<a id="tokenlink" th:href="${link}" style="word-break: break-all; color: #2d89ef;">
+    <p th:text="${link}"></p>
+</a>
+<p>Si no has sol·licitat aquesta verificació, si us plau ignora aquest missatge.</p>
+<p>Atentament,</p>
+<p>L'equip de MyCofre</p>
+</body>
+</html>

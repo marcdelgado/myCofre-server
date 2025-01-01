@@ -1,11 +1,11 @@
-package myCofre.server.controller.user;
+package myCofre.server.message;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record ActivateRequest(
+public record DeleteRequest(
 
         @Schema(description = "Email address", example = "john.smith@domain.test")
         @Email(message = "Invalid email format")
@@ -13,9 +13,8 @@ public record ActivateRequest(
         String email,
 
         @Schema(description = "Activation token", example = "123456")
-        @NotBlank(message = "Password cannot be blank")
-        @Size(min = 6, max = 6, message = "Activation token")
-        String activationToken
+        @Size(min = 0, max = 6, message = "Activation token")
+        String deleteToken
 )
 
 {

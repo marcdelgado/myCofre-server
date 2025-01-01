@@ -1,8 +1,9 @@
 
-package myCofre.server.controller.auth;
+package myCofre.server.controller;
 
+import myCofre.server.config.BaseController;
+import myCofre.server.message.*;
 import myCofre.server.helper.JwtHelper;
-import myCofre.server.controller.ApiErrorResponse;
 import myCofre.server.domain.LoginAttempt;
 import myCofre.server.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/myCofre-api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AuthController {
+public class AuthController extends BaseController {
 
   private final AuthenticationManager authenticationManager;
   private final AuthService authService;
@@ -32,6 +33,7 @@ public class AuthController {
   private final PasswordEncoder passwordEncoder;
 
   public AuthController(AuthenticationManager authenticationManager, AuthService authService, PasswordEncoder passwordEncoder) {
+    super();
     this.authenticationManager = authenticationManager;
     this.authService = authService;
     this.passwordEncoder = passwordEncoder;

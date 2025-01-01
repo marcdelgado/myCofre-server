@@ -1,12 +1,11 @@
-package myCofre.server.controller.user;
+package myCofre.server.message;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import myCofre.server.domain.User;
 
-public record UserResponse(
+public record SignupRequest(
 
         @Schema(description = "Name", example = "John")
         @Size(min = 2, max = 50, message = "Password must be between 2 and 50 characters")
@@ -21,10 +20,19 @@ public record UserResponse(
         @Schema(description = "Email address", example = "john.smith@domain.test")
         @Email(message = "Invalid email format")
         @NotBlank(message = "Email cannot be blank")
-        String email
+        String email,
+
+        @Schema(description = "Repassword (hash from original password)", example = "123456")
+        @NotBlank(message = "Password cannot be blank")
+        @Size(min = 6, max = 64, message = "Password must be between 6 and 20 characters")
+        String repassword,
+
+        @Schema(description = "Language code", example = "en")
+        @NotBlank(message = "Language cannot be blank")
+        @Size(min = 2, max = 2, message = "Activation token")
+        String language
 )
+
 {
-        public static UserResponse convertToResponse(User user) {
-                return new UserResponse(user.getName(), user.getSurname(), user.getEmail());
-        }
+
 }

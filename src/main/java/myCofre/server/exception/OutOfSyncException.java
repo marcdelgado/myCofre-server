@@ -1,4 +1,4 @@
-package myCofre.server.exceptions;
+package myCofre.server.exception;
 
 public class OutOfSyncException extends RuntimeException {
 

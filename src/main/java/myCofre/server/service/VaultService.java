@@ -1,9 +1,9 @@
 package myCofre.server.service;
 
-import myCofre.server.controller.vault.VaultRequest;
+import myCofre.server.message.VaultRequest;
 import myCofre.server.domain.Vault;
 import myCofre.server.domain.User;
-import myCofre.server.exceptions.OutOfSyncException;
+import myCofre.server.exception.OutOfSyncException;
 import myCofre.server.repository.VaultRepository;
 
 import java.nio.charset.StandardCharsets;
@@ -30,7 +30,7 @@ public class VaultService {
     }
 
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Vault findByUsername(String username) {
         Optional<User> user = userRepository.findByEmail(username);
         if (user.isPresent()) {
@@ -40,7 +40,7 @@ public class VaultService {
         return null;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Vault write(String username, VaultRequest vaultRequest) {
         Optional<User> user = userRepository.findByEmail(username);
         if (user.isPresent()) {

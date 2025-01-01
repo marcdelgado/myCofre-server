@@ -1,16 +1,16 @@
 
-package myCofre.server.controller.user;
+package myCofre.server.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
-import myCofre.server.controller.ApiErrorResponse;
-import myCofre.server.controller.auth.LoginAttemptResponse;
-import myCofre.server.domain.LoginAttempt;
+import myCofre.server.config.BaseController;
 import myCofre.server.domain.User;
 import myCofre.server.helper.JwtHelper;
+import myCofre.server.message.*;
 import myCofre.server.service.AuthService;
 import myCofre.server.service.EmailService;
 import myCofre.server.service.UserService;
@@ -19,12 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping(path = "/myCofre-api/user", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController {
+public class UserController extends BaseController {
 
   private final UserService userService;
 
@@ -33,6 +30,7 @@ public class UserController {
   private final AuthService authService;
 
   public UserController(UserService userService, EmailService emailService, AuthService authService) {
+    super();
     this.userService = userService;
     this.emailService = emailService;
     this.authService = authService;
@@ -44,9 +42,8 @@ public class UserController {
   @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
   @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
   @PutMapping("/signup")
-  public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest signupRequest) {
+  public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest signupRequest) throws MessagingException {
     userService.signup(signupRequest);
-    //emailService.sendEmail(requestDto.email(), "hola", "caracola");
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
@@ -91,8 +88,8 @@ public class UserController {
   @ApiResponse(responseCode = "409", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
   @ApiResponse(responseCode = "500", content = @Content(schema = @Schema(implementation = ApiErrorResponse.class)))
   @PatchMapping("/requestDelete")
-  public ResponseEntity<Void> requestDelete(@Valid @RequestBody DeleteRequest deleteRequest) {
-    userService.requestDelete(deleteRequest);
+  public ResponseEntity<Void> requestDelete(@Valid @RequestBody RequestDeleteRequest request) throws MessagingException {
+    userService.requestDelete(request);
     return ResponseEntity.status(HttpStatus.ACCEPTED).build();
   }
 

@@ -1,12 +1,13 @@
 
-package myCofre.server.controller.vault;
+package myCofre.server.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import myCofre.server.controller.ApiErrorResponse;
+import myCofre.server.message.ApiErrorResponse;
+import myCofre.server.message.VaultRequest;
 import myCofre.server.domain.Vault;
 import myCofre.server.service.VaultService;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class VaultController {
   private final VaultService vaultService;
 
   public VaultController(AuthenticationManager authenticationManager, VaultService vaultService) {
+    super();
     this.authenticationManager = authenticationManager;
     this.vaultService = vaultService;
   }

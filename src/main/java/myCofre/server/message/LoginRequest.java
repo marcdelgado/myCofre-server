@@ -1,4 +1,4 @@
-package myCofre.server.controller.auth;
+package myCofre.server.message;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;

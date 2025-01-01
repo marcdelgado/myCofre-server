@@ -2,7 +2,7 @@ package myCofre.server.helper;
 
 import myCofre.server.repository.UserRepository;
 import myCofre.server.domain.User;
-import myCofre.server.exceptions.NotFoundException;
+import myCofre.server.exception.NotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;

@@ -25,12 +25,13 @@ public class AuthService {
     this.userRepository = userRepository;
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public User findUserByEmail(String email){
     Optional<User> user = userRepository.findByEmail(email);
     return user.orElse(null);
   }
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   public void changePassword(String email, String newPassword){
     User user = findUserByEmail(email);
     user.setRepassword(newPassword);
@@ -38,12 +39,13 @@ public class AuthService {
   }
 
 
-  @Transactional
+  @Transactional(rollbackFor = Exception.class)
   public void addLoginAttempt(String email, boolean success) {
     LoginAttempt loginAttempt = new LoginAttempt(email, success, LocalDateTime.now());
     loginAttemptRepository.save(loginAttempt);
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public List<LoginAttempt> findRecentLoginAttempts(String email) {
     Pageable topTen = PageRequest.of(0, 10);
     return loginAttemptRepository.findRecent(email, topTen);
